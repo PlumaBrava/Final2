@@ -19,7 +19,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import com.nextnut.mylibrary.MainActivityLibrary;
-import com.nextnut.Joke;
+//import com.nextnut.Joke;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Final1", "iniADS");
         mAdView.loadAd(adRequest);
 
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+
 
     }
 
@@ -89,9 +89,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(){
-        Toast.makeText(this, new Joke().getJoke(), Toast.LENGTH_SHORT).show();
-        Intent myIntent = new Intent(this, MainActivityLibrary.class);
-        myIntent.putExtra("joke",new Joke().getJoke());
-        startActivity(myIntent);
+        Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
+        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+//        Intent myIntent = new Intent(this, MainActivityLibrary.class);
+//        myIntent.putExtra("joke",new Joke().getJoke());
+//        startActivity(myIntent);
     }
 }

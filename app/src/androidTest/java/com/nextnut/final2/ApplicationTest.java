@@ -1,6 +1,7 @@
 package com.nextnut.final2;
 
 import android.app.Application;
+import android.test.AndroidTestCase;
 import android.test.ApplicationTestCase;
 
 /**
@@ -11,3 +12,14 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 }
+
+
+//public class EchoAndroidTest extends AndroidTestCase {
+//    public void testVerifyEchoResponse() {
+//        assertEquals("hello", Echo.echo("hello"));
+//    }
+//
+//    public void testVerifyLoggingEchoResponse() {
+//        assertEquals("hello", Echo.echo("hello", true));
+//    }
+//}
