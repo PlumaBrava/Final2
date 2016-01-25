@@ -22,12 +22,12 @@ import java.io.IOException;
  * Created by perez.juan.jose on 21/01/2016.
  */
 
-class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     private static MyApi myApiService = null;
     private Context context;
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
+    public String doInBackground(Pair<Context, String>... params) {
         if(myApiService == null) {  // Only do this once
 //            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
 //                    new AndroidJsonFactory(), null)
@@ -61,7 +61,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
     }
 
     @Override
-    protected void onPostExecute(String result) {
+  public void onPostExecute(String result) {
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         Intent myIntent = new Intent(context, MainActivityLibrary.class);
         myIntent.putExtra("joke",result);

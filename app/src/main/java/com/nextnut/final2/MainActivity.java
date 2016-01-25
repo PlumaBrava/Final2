@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import com.nextnut.final2.R;
 import com.nextnut.mylibrary.MainActivityLibrary;
 //import com.nextnut.Joke;
 
