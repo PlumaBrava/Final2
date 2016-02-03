@@ -9,13 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.nextnut.final2.EndpointsAsyncTask;
+import com.nextnut.final2.EndpointsAsyncTaskold;
 import com.nextnut.final2.R;
 
 public class MainActivityPaid extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void  onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_paid);
 
@@ -33,8 +33,9 @@ public class MainActivityPaid extends AppCompatActivity {
     }
 
     public void tellJoke(){
+        Log.i("Final1", "tellJoke");
         Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+        new EndpointsAsyncTaskold().execute();
 //        Intent myIntent = new Intent(this, MainActivityLibrary.class);
 //        myIntent.putExtra("joke",new Joke().getJoke());
 //        startActivity(myIntent);

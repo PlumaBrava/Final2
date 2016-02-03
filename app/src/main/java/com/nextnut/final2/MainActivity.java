@@ -2,6 +2,7 @@ package com.nextnut.final2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,23 +14,42 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.perez.juan.jose.backend.myApi.MyApi;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.nextnut.final2.R;
 import com.nextnut.mylibrary.MainActivityLibrary;
+
+import junit.framework.TestCase;
+
+import java.io.IOException;
 //import com.nextnut.Joke;
 
 public class MainActivity extends AppCompatActivity {
+    public ProgressBar spinner;
 
+    public void setSpinnerVisibility(int v) {
+        this.spinner.setVisibility(v);
+    }
+
+    private static MyApi myApiService = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,12 +60,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Log.i("Final1", "initButton");
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+
+        Log.i("Final1", "initButton spiner visibility: "+spinner.getVisibility());
         Button btnSat = (Button) findViewById(R.id.jokebutton);
         btnSat.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("Final1", "presButton");
-                tellJoke();
+                TextView txt=(TextView )findViewById(R.id.instructions_text_view);
+                txt.setText(null);
+               tellJoke();
 
 
             }
@@ -90,10 +115,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(){
+        spinner.setVisibility(View.VISIBLE);
         Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
-//        Intent myIntent = new Intent(this, MainActivityLibrary.class);
+//        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner,this);
+        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold();
+//        p.execute(new Pair<Context, String>(this, "Manfred"));
+        p.execute(new Pair<Context, String>(this, "juan"));
+//
+// Intent myIntent = new Intent(this, MainActivityLibrary.class);
 //        myIntent.putExtra("joke",new Joke().getJoke());
 //        startActivity(myIntent);
     }
+    class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+
+        private Context context;
+
+        @Override
+        protected String doInBackground(Pair<Context, String>... params) {
+            if(myApiService == null) {  // Only do this once
+                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(), null)
+                        // options for running against local devappserver
+                        // - 10.0.2.2 is localhost's IP address in Android emulator
+                        // - turn off compression when running against local devappserver
+                        .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                            @Override
+                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                abstractGoogleClientRequest.setDisableGZipContent(true);
+                            }
+                        });
+                // end options for devappserver
+
+                myApiService = builder.build();
+            }
+
+            context = params[0].first;
+            String name = params[0].second;
+
+            try {
+                return myApiService.sayHi(name).execute().getData();
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
