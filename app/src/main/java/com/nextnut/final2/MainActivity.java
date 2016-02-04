@@ -19,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.perez.juan.jose.backend.myApi.MyApi;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -36,12 +38,16 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     public ProgressBar spinner;
+    private InterstitialAd mInterstitial;
+    private AdView mAddView;
+    private Button btnSat;
 
     public void setSpinnerVisibility(int v) {
         this.spinner.setVisibility(v);
     }
 
     private static MyApi myApiService = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,32 +67,38 @@ public class MainActivity extends AppCompatActivity {
         });
 
         spinner=(ProgressBar)findViewById(R.id.progressBar);
-        spinner.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.GONE);
 
-        Log.i("Final1", "initButton spiner visibility: "+spinner.getVisibility());
-        Button btnSat = (Button) findViewById(R.id.jokebutton);
+        Log.i("Final1", "initButton spiner visibility: " + spinner.getVisibility());
+        btnSat = (Button) findViewById(R.id.jokebutton);
         btnSat.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("Final1", "presButton");
-                TextView txt=(TextView )findViewById(R.id.instructions_text_view);
+                TextView txt = (TextView) findViewById(R.id.instructions_text_view);
                 txt.setText(null);
-               tellJoke();
+                showInsterstitial();
+                //tellJoke();
 
 
             }
         });
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        // Create an ad request. Check logcat output for the hashed device ID to
-        // get test ads on a physical device. e.g.
-        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
+
+
+        mAddView = (AdView)findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("A086DD273532AA15DD4D5A83D2A6880E")
                 .addTestDevice("4A2790CC2F2F210B9805A86F1289FEAF")
                 .build();
-        Log.i("Final1", "iniADS");
-        mAdView.loadAd(adRequest);
+        mAddView.setAdListener(new ToastAdListener(this));
+        mAddView.loadAd(adRequest);
+
+
+
+
+        mInterstitial = newInterstitialAd();
+        loadInterstitial();
 
 
 
@@ -118,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setVisibility(View.VISIBLE);
         Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
 //        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner,this);
-        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold();
+        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner);
 //        p.execute(new Pair<Context, String>(this, "Manfred"));
         p.execute(new Pair<Context, String>(this, "juan"));
 //
@@ -126,44 +138,70 @@ public class MainActivity extends AppCompatActivity {
 //        myIntent.putExtra("joke",new Joke().getJoke());
 //        startActivity(myIntent);
     }
-    class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
 
-        private Context context;
 
-        @Override
-        protected String doInBackground(Pair<Context, String>... params) {
-            if(myApiService == null) {  // Only do this once
-                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                        new AndroidJsonFactory(), null)
-                        // options for running against local devappserver
-                        // - 10.0.2.2 is localhost's IP address in Android emulator
-                        // - turn off compression when running against local devappserver
-                        .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                            @Override
-                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                                abstractGoogleClientRequest.setDisableGZipContent(true);
-                            }
-                        });
-                // end options for devappserver
 
-                myApiService = builder.build();
-            }
 
-            context = params[0].first;
-            String name = params[0].second;
+    public void loadInterstitial(){
 
-            try {
-                return myApiService.sayHi(name).execute().getData();
-            } catch (IOException e) {
-                return e.getMessage();
-            }
-        }
 
-        @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-        }
+            // Disable the next level button and load the ad.
+        btnSat.setEnabled(false);
+        AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template")
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("A086DD273532AA15DD4D5A83D2A6880E")
+                    .addTestDevice("4A2790CC2F2F210B9805A86F1289FEAF")
+                    .build();
+        mInterstitial.loadAd(adRequest);
     }
+
+
+
+
+
+
+
+
+
+    public void showInsterstitial(){
+        if(mInterstitial != null && mInterstitial.isLoaded()){
+            mInterstitial.show();
+
+        } else {
+            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
+
+    private InterstitialAd newInterstitialAd() {
+
+        InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdListener(new ToastAdListener(this) {
+            @Override
+            public void onAdLoaded() {
+                btnSat.setEnabled(true);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                btnSat.setEnabled(true);
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Proceed to the next level.
+                mInterstitial = newInterstitialAd();
+                loadInterstitial();
+                spinner.setVisibility(View.GONE);
+                tellJoke();
+            }
+        });
+        return interstitialAd;
+    }
+
 
 }

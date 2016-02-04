@@ -14,10 +14,9 @@ import android.widget.Toast;
 import com.example.perez.juan.jose.backend.myApi.MyApi;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+
 import com.nextnut.mylibrary.MainActivityLibrary;
-import com.nextnut.final2.MainActivity;
+
 
 import java.io.IOException;
 
@@ -28,20 +27,15 @@ import java.io.IOException;
  */
 
 public class EndpointsAsyncTaskold extends AsyncTask<Pair<Context, String>,Void, String> {
-//    public class EndpointsAsyncTaskold extends AsyncTask<Pair<Context, String>,Void, String> {1
+
     private static MyApi myApiService = null;
     private Context context;
-//    final MainActivity p=null;
-   //private ProgressBar spinner;
+    private ProgressBar spinner;
 
-//    public EndpointsAsyncTaskold(ProgressBar spinner, Context context) {
-//        this.spinner = spinner;
-//        this.context =context;
-//    }
-//
-//    public EndpointsAsyncTaskold() {
-//
-//    }
+    public EndpointsAsyncTaskold(ProgressBar spinner) {
+        this.spinner = spinner;
+    }
+
 
 
     @Override
@@ -57,7 +51,7 @@ public class EndpointsAsyncTaskold extends AsyncTask<Pair<Context, String>,Void,
 
     @Override
     public String doInBackground(Pair<Context, String>... params) {
-//        public String doInBackground(Pair<Context, String>... params) {
+
 
         Log.i("AsyncTaskOld", "doInBackground");
         if (myApiService == null) {  // Only do this once
@@ -91,7 +85,7 @@ public class EndpointsAsyncTaskold extends AsyncTask<Pair<Context, String>,Void,
 
             try {
                 Log.i("AsyncTaskOld", "doInBackground-call service");
-                return myApiService.sayHi("jusn").execute().getData();
+                return myApiService.sayHi("j").execute().getData();
             } catch (IOException e) {
                 Log.i("AsyncTaskOld", "doInBackground-exception");
                 return e.getMessage();
@@ -104,13 +98,12 @@ public class EndpointsAsyncTaskold extends AsyncTask<Pair<Context, String>,Void,
   public void onPostExecute(String result) {
         Log.i("AsyncTaskOld", "onPostExecute: result," + result);
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-//        spinner.setVisibility(View.GONE);
+        spinner.setVisibility(View.GONE);
 
         Intent myIntent = new Intent(context, MainActivityLibrary.class);
         myIntent.putExtra("joke",result);
         context.startActivity(myIntent);
-//        IntentFilter intentFilter =new IntentFilter("com.nextnut.final2.mylibrary.MainActivityLibrary.class");
-//        registerReceiver()
+
 
     }
 

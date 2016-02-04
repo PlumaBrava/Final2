@@ -89,7 +89,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'junit:junit:4.12'
-    compile project(path: ':backend2', configuration: 'android-endpoints')
+//    compile project(path: ':backend2', configuration: 'android-endpoints')
 }
 
 
