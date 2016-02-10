@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.perez.juan.jose.backend.myApi.MyApi;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -47,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         spinner=(ProgressBar)findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
@@ -70,15 +71,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        // Banner advertising
         mAddView = (AdView)findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("A086DD273532AA15DD4D5A83D2A6880E")
                 .addTestDevice("4A2790CC2F2F210B9805A86F1289FEAF")
                 .build();
-        mAddView.setAdListener(new ToastAdListener(this));
+            //mAddView.setAdListener(new ToastAdListener(this));
         mAddView.loadAd(adRequest);
+
+        // interstitial advertising
         mInterstitial = newInterstitialAd();
         loadInterstitial();
 
@@ -110,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
 
-        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner,btnSat);
+        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(this,spinner,btnSat);
 
-        p.execute(this);
+        p.execute();
 
     }
 
@@ -157,22 +160,66 @@ public class MainActivity extends AppCompatActivity {
 
         InterstitialAd interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.setAdListener(new ToastAdListener(this) {
+        interstitialAd.setAdListener(new AdListener() {
+
+
+            @Override
+            public void onAdLeftApplication() {
+                Toast.makeText(getApplicationContext(),"LeftApplication",Toast.LENGTH_SHORT).show();
+
+            }
+            @Override
+            public void onAdOpened() {
+                Toast.makeText(getApplicationContext(),"on AdOpened",Toast.LENGTH_SHORT).show();
+
+            }
+
+
+
             @Override
             public void onAdLoaded() {
-                btnSat.setEnabled(true);
+                Toast.makeText(getApplicationContext(),"on onAdLoaded",Toast.LENGTH_SHORT).show();
+               if(spinner.getVisibility()!=View.VISIBLE){ btnSat.setEnabled(true);}
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 // When Failed, prepear a new add and call tellJoke.
+                String mErrorReason="";
+                switch (errorCode){
+
+                    case AdRequest.ERROR_CODE_INTERNAL_ERROR:
+                        mErrorReason ="Internal Error";
+                        break;
+
+                    case AdRequest.ERROR_CODE_INVALID_REQUEST:
+                        mErrorReason ="Invalid Request";
+                        break;
+
+                    case AdRequest.ERROR_CODE_NETWORK_ERROR:
+                        mErrorReason ="Network Error";
+                        break;
+
+                    case AdRequest.ERROR_CODE_NO_FILL:
+                        mErrorReason ="No Fill";
+                        break;
+                }
+                Toast.makeText(getApplicationContext(),
+                        String.format("on onAdFailedToLoad (%S)", mErrorReason ),
+                        Toast.LENGTH_SHORT).show();
+                super.onAdFailedToLoad(errorCode);
+
+
                 mInterstitial = newInterstitialAd();
                 loadInterstitial();
                 btnSat.setEnabled(true);
             }
 
+
+
             @Override
             public void onAdClosed() {
+                Toast.makeText(getApplicationContext(),"on Ad Closed",Toast.LENGTH_SHORT).show();
                 // When Closed the add is clossed, prepear a new add and call tellJoke.
                 mInterstitial = newInterstitialAd();
                 loadInterstitial();

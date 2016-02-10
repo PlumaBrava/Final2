@@ -29,14 +29,15 @@ import java.io.IOException;
  * Created by perez.juan.jose on 21/01/2016.
  */
 
-public class EndpointsAsyncTaskold extends AsyncTask<Context,Void, String> {
+public class EndpointsAsyncTaskold extends AsyncTask<Void,Void, String> {
 
     private static MyApi myApiService = null;
     private Context context;
     private ProgressBar spinner;
     private Button btnSat;
 
-    public EndpointsAsyncTaskold(ProgressBar spinner,Button btnSat) {
+    public EndpointsAsyncTaskold(Context context,ProgressBar spinner,Button btnSat) {
+        this.context=context;
         this.spinner = spinner;
         this.btnSat=btnSat;
     }
@@ -52,7 +53,7 @@ public class EndpointsAsyncTaskold extends AsyncTask<Context,Void, String> {
     }
 
     @Override
-    public String doInBackground(Context... contexts) {
+    public String doInBackground(Void... items) {
 
 
         Log.i("AsyncTaskOld", "doInBackground");
@@ -84,7 +85,7 @@ public class EndpointsAsyncTaskold extends AsyncTask<Context,Void, String> {
         }
 
 
-            this.context = contexts[0];
+            //this.context = contexts[0];
 
 
             try {
