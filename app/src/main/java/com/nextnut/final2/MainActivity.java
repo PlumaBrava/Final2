@@ -1,12 +1,10 @@
 package com.nextnut.final2;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.util.Pair;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,32 +13,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.example.perez.juan.jose.backend.myApi.MyApi;
-import com.google.android.gms.ads.AdListener;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.nextnut.final2.R;
-import com.nextnut.mylibrary.MainActivityLibrary;
 
-import junit.framework.TestCase;
 
-import java.io.IOException;
-//import com.nextnut.Joke;
 
 public class MainActivity extends AppCompatActivity {
     public ProgressBar spinner;
+    private Button btnSat;
     private InterstitialAd mInterstitial;
     private AdView mAddView;
-    private Button btnSat;
+
 
     public void setSpinnerVisibility(int v) {
         this.spinner.setVisibility(v);
@@ -74,12 +64,8 @@ public class MainActivity extends AppCompatActivity {
         btnSat.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("Final1", "presButton");
-                TextView txt = (TextView) findViewById(R.id.instructions_text_view);
-                txt.setText(null);
+
                 showInsterstitial();
-                //tellJoke();
-
-
             }
         });
 
@@ -93,14 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mAddView.setAdListener(new ToastAdListener(this));
         mAddView.loadAd(adRequest);
-
-
-
-
         mInterstitial = newInterstitialAd();
         loadInterstitial();
-
-
 
     }
 
@@ -127,16 +107,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(){
-        spinner.setVisibility(View.VISIBLE);
+
         Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
-//        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner,this);
-        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner);
-//        p.execute(new Pair<Context, String>(this, "Manfred"));
-        p.execute(new Pair<Context, String>(this, "juan"));
-//
-// Intent myIntent = new Intent(this, MainActivityLibrary.class);
-//        myIntent.putExtra("joke",new Joke().getJoke());
-//        startActivity(myIntent);
+
+        EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(spinner,btnSat);
+
+        p.execute(this);
+
     }
 
 
@@ -188,15 +165,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
+                // When Failed, prepear a new add and call tellJoke.
+                mInterstitial = newInterstitialAd();
+                loadInterstitial();
                 btnSat.setEnabled(true);
             }
 
             @Override
             public void onAdClosed() {
-                // Proceed to the next level.
+                // When Closed the add is clossed, prepear a new add and call tellJoke.
                 mInterstitial = newInterstitialAd();
                 loadInterstitial();
-                spinner.setVisibility(View.GONE);
                 tellJoke();
             }
         });

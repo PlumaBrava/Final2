@@ -47,6 +47,14 @@ dependencies {
 
 appengine {
   downloadSdk = true
+//    daemon = true
+
+    //  daemon: Specifies whether the local development server should run in the background.
+    //  When true, this task completes as soon as the server has started.
+    // When false, this task blocks until the local development server is stopped (defaults to false).
+
+
+
   appcfg {
     oauth2 = true
   }

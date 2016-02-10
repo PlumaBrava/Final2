@@ -21,3 +21,35 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task startService() {
+    dependsOn ':backend:appengineRun'
+}
+task tests() {
+    // Completar para incluir todos los test
+//    dependsOn ':app:connectedAndroidTest'
+    dependsOn ':app:connectedFreeDebugAndroidTest'
+}
+task stopService() {
+    dependsOn ':backend:appengineStop'
+}
+
+tests.mustRunAfter startService
+stopService.mustRunAfter tests
+
+task gceTests() {
+    group = 'verification'
+    description = 'Run Android tests depending on the GCE development server'
+
+    evaluationDependsOn ":backend"
+
+    project(":backend"){
+        appengine{
+            daemon true
+        }
+    }
+
+    dependsOn startService
+    dependsOn tests
+    dependsOn stopService
+}

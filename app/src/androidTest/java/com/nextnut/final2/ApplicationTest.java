@@ -8,6 +8,9 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.ads.AdActivity;
+import com.google.android.gms.ads.InterstitialAd;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Rule;
@@ -16,18 +19,19 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-//import static junit.framework.Assert.assertTrue;
-//import static junit.framework.TestCase.assertEquals;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.hamcrest.Matchers.is;
+
+import static com.google.android.gms.ads.AdActivity.*;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -46,14 +50,14 @@ public class ApplicationTest {
 
     }
 
-    @Test
-    public void InstructionsIsNull(){
+//    @Test
+//    public void InstructionsIsNull(){
+////
+////        onView(withId(R.id.jokebutton)).perform(click());
+////        String expectedText = "HelloWorld!";
+//        onView(withId(R.id.jokebutton)).check(matches(withText(isEmptyOrNullString())));
 //
-        onView(withId(R.id.jokebutton)).perform(click());
-        String expectedText = "HelloWorld!";
-        onView(withId(R.id.instructions_text_view)).check(matches(withText(isEmptyOrNullString())));
-
-    }
+//    }
 
 //
 //    @Test
@@ -64,26 +68,26 @@ public class ApplicationTest {
 //    }
 
     @Test
-    public void checkButton(){
+    public void checkButton_Add_AsyncTask(){
 
         String expectedText = "Tell Joke free";
+        pauseTestFor(4000);
 //        onView(withId(R.id.instructions_text_view)).check(matches(withText(expectedText)));
-      onView(withId(R.id.jokebutton)).check(matches(withText(expectedText)));
-
+      onView(withId(R.id.jokebutton))
+//              .check(matches(withText(expectedText)))
+              .perform(click());
+        pauseTestFor(10000);
+        onView(withClassName(endsWith("View"))).perform(pressBack());
+        pauseTestFor(10000);
+        onView(withId(R.id.libraryText)).check(matches(notNullValue()));
     }
 
-//    @Test
-//    public void testVerifyEchoResponse() {
-//        assertEquals("hello", "hello");
-//    }
-//    @Test
-//    public void testSomething() throws Throwable {
-//        assertTrue(1 + 1 == 2);
-//    }
-//    @Test
-//    public void testSomethingElse() throws Throwable {
-//        assertTrue(1 + 1 == 3);
-//    }
-
+    private void pauseTestFor(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
