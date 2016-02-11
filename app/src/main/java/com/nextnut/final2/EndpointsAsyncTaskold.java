@@ -102,7 +102,7 @@ public class EndpointsAsyncTaskold extends AsyncTask<Void,Void, String> {
     @Override
   public void onPostExecute(String result) {
         Log.i("AsyncTaskOld", "onPostExecute: result," + result);
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
         Intent myIntent = new Intent(context, MainActivityLibrary.class);
         myIntent.putExtra("joke", result);

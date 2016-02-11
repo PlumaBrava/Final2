@@ -27,8 +27,8 @@ public class JokeAsyncTaskTest2 extends InstrumentationTestCase{
 
 
     private class TestJokeAsyncTask extends EndpointsAsyncTaskold{
-        public TestJokeAsyncTask(ProgressBar spinner, Button btnSat) {
-            super(spinner, btnSat);
+        public TestJokeAsyncTask(Context context,ProgressBar spinner, Button btnSat) {
+            super(context,spinner, btnSat);
         }
 
         @Override
@@ -42,9 +42,10 @@ public class JokeAsyncTaskTest2 extends InstrumentationTestCase{
     public void testAsyncTaskResponse() throws Throwable {
 
         final TestJokeAsyncTask testJokeAsyncTask = new TestJokeAsyncTask(
+                mContext,
                 new ProgressBar(mContext, null,android.R.attr.progressBarStyleHorizontal),
                 new Button( mContext,null,android.R.attr.button));
-        testJokeAsyncTask.execute(mContext);
+        testJokeAsyncTask.execute();
         signal.await(); //Wait till AsyncTask finishes
     }
 

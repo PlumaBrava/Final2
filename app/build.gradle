@@ -26,7 +26,7 @@ android {
     productFlavors {
 
         free {
-            applicationId = "com.nextnut.final2"
+            applicationId = "com.nextnut.final2.free"
         }
         paid {
             applicationId = "com.nextnut.final2.paid"
@@ -43,8 +43,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
 
-    // Adds Dependencies
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    // Adds Dependencies anly for the free version
+    freeCompile 'com.google.android.gms:play-services-ads:8.4.0'
 
 //App Dependencies
     compile project(':mylibrary')
@@ -54,12 +54,11 @@ dependencies {
 
 //Testing denpendencies
     compile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test:runner:0.4.1') { }
+
     androidTestCompile 'com.android.support.test:rules:0.4.1'
-    // Optional -- UI testing with Espresso
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {}
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support:support-annotations:23.1.1'
-    // Optional -- Hamcrest library
+
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
 
 

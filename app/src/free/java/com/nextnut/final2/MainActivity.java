@@ -48,14 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         spinner=(ProgressBar)findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
@@ -111,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(){
 
-        Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Se llama a backend", Toast.LENGTH_SHORT).show();
 
         EndpointsAsyncTaskold p=new EndpointsAsyncTaskold(this,spinner,btnSat);
 
@@ -165,12 +157,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(),"LeftApplication",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"LeftApplication",Toast.LENGTH_SHORT).show();
 
             }
             @Override
             public void onAdOpened() {
-                Toast.makeText(getApplicationContext(),"on AdOpened",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"on AdOpened",Toast.LENGTH_SHORT).show();
 
             }
 
@@ -178,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdLoaded() {
-                Toast.makeText(getApplicationContext(),"on onAdLoaded",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"on onAdLoaded",Toast.LENGTH_SHORT).show();
                if(spinner.getVisibility()!=View.VISIBLE){ btnSat.setEnabled(true);}
             }
 
@@ -219,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdClosed() {
-                Toast.makeText(getApplicationContext(),"on Ad Closed",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"on Ad Closed",Toast.LENGTH_SHORT).show();
                 // When Closed the add is clossed, prepear a new add and call tellJoke.
                 mInterstitial = newInterstitialAd();
                 loadInterstitial();

@@ -37,10 +37,8 @@ public class MainActivityPaid extends AppCompatActivity {
 
     public void tellJoke(){
         Log.i("Final1", "tellJoke");
-        Toast.makeText(this, "Se llama sa backend", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Se llama sa backend", Toast.LENGTH_SHORT).show();
         new EndpointsAsyncTaskold(this,spinner,btnSat).execute();
-//        Intent myIntent = new Intent(this, MainActivityLibrary.class);
-//        myIntent.putExtra("joke",new Joke().getJoke());
-//        startActivity(myIntent);
+
     }
 }

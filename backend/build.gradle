@@ -5,23 +5,9 @@ buildscript {
     repositories {
 
         mavenCentral()
-//        maven{
-//         url 'http://repo.maven.apache.org/maven2'
-//        }
-//        flatDir {
-//            dirs 'C:/Users/perez.juan.jose/Documents/GitHub\\Librerias'
-//        }
-//
-//        flatDir('C:/Users/perez.juan.jose/Documents/GitHub/Librerias')
 
     }
     dependencies {
-//         compile files('C:/Users/perez.juan.jose/Documents/GitHub/Librerias/appengine-java-sdk-1.9.31.zip')
-//        file: 'C:/Users/perez.juan.jose/Documents/GitHub/Librerias/appengine-java-sdk-1.9.31.zip'
-
-//      classpath 'com.google.appengine:gradle-appengine-plugin:1.9.31'
-
-//        classpath  'com.google.appengine:appengine-maven-plugin:1.9.31'
         classpath 'com.google.appengine:gradle-appengine-plugin:1.9.30'
 
 
